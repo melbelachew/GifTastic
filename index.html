@@ -3,41 +3,66 @@
 
 <head>
   <meta charset="utf-8">
-  <title>How I feel2</title>
+  <link href='https://fonts.googleapis.com/css?family=Codystar' rel='stylesheet'>
+  <title> Emotions</title>
 </head>
 
 <body>
         <style type="text/css">
             body {
-                background-color: rgb(216, 208, 237);
+                background-image: url('img.jpg'); 
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+                background-color: rgb(237, 235, 244);
+                font-family: Codystar;
+            }
+
+            h5,h6 {
+              text-align: center
             }
             button,
             div,
             form,
             input {
+              font-family: Codystar;
+              font-weight: bolder;
+              font-size: 20px;
+              text-align: center;
               margin: 10px; 
               padding: 5px;
               font:bold;
               border: 2px, magenta;
-              Color: rgb(94, 6, 94);
+              Color: rgb(29, 1, 29);
+              
+            }
+            button:hover {
+              background-color: rgb(127, 109, 143);
+              transform: scale(1.2);
+              transition: 1s;
+              opacity:.8;
+              border-radius: 50% 
             }
           </style>
-        <div data-howIfeel class="button-view">
-  <button data-howIfeel="overwhelmed">Overwhelmed</button>
-  <button data-howIfeel="fml">:(</button>
-  <button data-howIfeel="computer">Programing is easy. NOT</button>
-  <button data-howIfeel="help">Help</button>
-  <button data-howIfeel="hopefull">There is hope</button>
-  <button data-howIfeel="motivation">I can do this</button>
-  <button data-howIfeel="perseverance">Grit is what I need</button>
-  <button data-howIfeel="zen">Meditation might help</button>
-  <button data-howIfeel="dance">When it's over</button>
-  </div>
+        <div data-emotions class="button-view">
+          <h5>Click the emotion buttons to display GIPHY</h5>
+          <h6>Emotions</h6>
+  <button data-emotions="Happy">Joy</button>
+  <button data-emotions="Kindness">Kindness</button>
+  <button data-emotions="Loving">Love</button>
+  <button data-emotions="Hopefull">Hope</button>
+  <button data-emotions="Surprised">Suprise</button>
+  <button data-emotions="Fear">Fear</button>
+  <button data-emotions="Angry">Anger</button>
+  <button data-emotions="Sad">Sadness</button>
+  <button data-emotions="Disgusted">Disgust</button>
+  <button data-emotions="Ashamed">Shame</button>
+  
+</div>
 
   <form id="giphy-form">
-        <label for="giphy-input">Add a Giphy</label>
+        <label for="giphy-input">Search GIFS</label>
         <input type="text" id="giphy-input"><br>
-  
         <!-- Button triggers new giphy to be added -->
         <input id="add-giphy" type="submit" value="Search">
       </form>
@@ -50,12 +75,12 @@
   <script type="text/javascript">
     // Adding click event listen listener to all buttons
     $("button").on("click", function() {
-      // Grabbing and storing the data-howIfeel property value from the button
-      var myfeelings = $(this).attr("data-howIfeel");
+      // Grabbing and storing the data-emotions property value from the button
+      var searchThis = $(this).attr("data-emotions");
 
       // Constructing a queryURL using the animal name
       var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        myfeelings + "&api_key=dc6zaTOxFJmzC&limit=10";
+        searchThis + "&api_key=dc6zaTOxFJmzC&limit=10";
 
       // Performing an AJAX request with the queryURL
       $.ajax({
@@ -75,36 +100,36 @@
           for (var i = 0; i < results.length; i++) {
 
             // Creating and storing a div tag
-            var feelingsDiv = $("<div>");
+            var emotionsDiv = $("<div>");
 
             // Creating a paragraph tag with the result item's rating
             var p = $("<p>").text("Rating: " + results[i].rating);
 
             // Creating and storing an image tag
-            var feelingsImage = $("<img>");
+            var emotionsGif = $("<img>");
 
             // Setting the src attribute of the image to a property pulled off the result item
-            feelingsImage.addClass("pause")
-            feelingsImage.attr("src", results[i].images.fixed_height.url);
-            feelingsImage.attr("animate", results[i].images.fixed_height.url);
+            emotionsGif.addClass("pause")
+            emotionsGif.attr("src", results[i].images.fixed_height.url);
+            emotionsGif.attr("animate", results[i].images.fixed_height.url);
 
-            feelingsImage.attr("still",results[i].images.fixed_height_still.url);
+            emotionsGif.attr("still",results[i].images.fixed_height_still.url);
 
             // Appending the paragraph and image tag to the animalDiv
         
-            feelingsDiv.append(feelingsImage);
-            feelingsDiv.append(p);
+            emotionsDiv.append(emotionsGif);
+            emotionsDiv.append(p);
 
             // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
-            $("#gifs-appear-here").prepend(feelingsDiv);
+            $("#gifs-appear-here").prepend(emotionsDiv);
           }
           
           $("#gifs-appear-here").on("click",".pause", function(){
-              var feelingsImageUrl = $(this).attr('src');
+              var emotionsImageUrl = $(this).attr('src');
               var animate = $(this).attr('animate');
               var still = $(this).attr('still');
               
-            if (feelingsImageUrl ===still){
+            if (emotionsImageUrl ===still){
                 $(this).attr('src',animate);
             }
             else {
@@ -126,18 +151,57 @@
                     $('#button-view').append(btn)
                 }
                }
+});
+    
+$('form').submit(function(e) {
+ 
+  e.preventDefault();
+  
+    var userInput = $('#giphy-input').val().replace(/ +?/g, '');
+    console.log(userInput);
 
-              //  ("#add-giphy").on("click", function(event) {
-              //    event.preventDefault();
-              //    var userInput = $("#giphy-input").val();
-              //    btn.push(userInput);
-              //    renderButton();
-              //  })
-               
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        userInput + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+      // Performing an AJAX request with the queryURL
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).then(function(response){
+        var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+
+            // Creating and storing a div tag
+            var emotionsDiv = $("<div>");
+
+            // Creating a paragraph tag with the result item's rating
+            var p = $("<p>").text("Rating: " + results[i].rating);
+
+            // Creating and storing an image tag
+            var emotionsGif = $("<img>");
+
+            // Setting the src attribute of the image to a property pulled off the result item
+            emotionsGif.addClass("pause")
+            emotionsGif.attr("src", results[i].images.fixed_height.url);
+            emotionsGif.attr("animate", results[i].images.fixed_height.url);
+
+            emotionsGif.attr("still",results[i].images.fixed_height_still.url);
+
+            // Appending the paragraph and image tag to the animalDiv
+        
+            emotionsDiv.append(emotionsGif);
+            emotionsDiv.append(p);
+
+            // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
+            $("#gifs-appear-here").prepend(emotionsDiv);
+          }
+
+        
+      })
+      
      });
-
-     
-
+    //  location.reload()
   </script>
 </body>
 
